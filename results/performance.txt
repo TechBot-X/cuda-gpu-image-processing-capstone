@@ -10,10 +10,10 @@ Architecture: sm_89
 
 operation  CPU ms  GPU kernel ms  H2D ms  D2H ms
 ---------  ------  --------------  ------  ------
-grayscale  0.001   1.423           0.445   0.080
-enhance    0.002   0.083           0.065   0.049
-blur       0.002   0.188           0.079   0.111
-edge       0.002   0.176           0.077   0.119
+grayscale  0.001   1.360           0.411   0.118
+enhance    0.002   0.341           0.176   0.067
+blur       0.003   0.109           0.069   0.104
+edge       0.002   0.354           0.095   0.169
 
 Interpretation:
 The sample image is intentionally tiny, so launch and transfer overhead dominate. These measurements prove successful GPU execution but are not a claim of GPU speedup. For a meaningful throughput comparison, repeat the same commands with a large image such as 1920x1080 and compare the CPU and GPU columns.

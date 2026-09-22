@@ -1,64 +1,119 @@
 # Presentation and Demo Script
 
-## Slide 1 - Project Title and Objective
+This 15-slide script is designed for a 5-10 minute Coursera peer-review video. Spend approximately 20-35 seconds per slide and use the live terminal demonstration on Slides 9-10.
 
-**On slide:** CUDA GPU-Accelerated Image Processing and Enhancement.
+## Slide 1 - Title
 
-**Speaker notes:** This project applies four common image-processing operations on an NVIDIA GPU. The objective is to demonstrate explicit CUDA memory management, kernel execution, synchronization, and measured CPU-versus-GPU timing in a complete command-line application.
+**Display:** CUDA GPU-Accelerated Image Processing and Enhancement.
 
-## Slide 2 - Problem and Use Case
+**Say:** This project is a CUDA C++ image-processing application that demonstrates genuine NVIDIA GPU parallel processing from input loading through output generation.
 
-**On slide:** One image contains many pixels; the same operation is repeated across them.
+## Slide 2 - Problem and Motivation
 
-**Speaker notes:** Grayscale, enhancement, blur, and edge detection repeat similar arithmetic for every pixel. That makes image processing a natural data-parallel workload. A CPU can process pixels sequentially, while a GPU can schedule many pixel calculations concurrently.
+**Display:** An image grid with many independent pixels.
 
-## Slide 3 - Solution Architecture
+**Say:** Grayscale conversion, enhancement, blur, and edge detection repeat similar arithmetic over many pixels. That makes the workload a natural example of data parallelism. The current sample is deliberately small for a portable smoke test, while larger images are the appropriate target for throughput benchmarking.
 
-**On slide:** Input file -> host vector -> device global memory -> CUDA kernel -> host vector -> output file.
+## Slide 3 - Project Objective
 
-**Speaker notes:** The CPU loads a PPM image into RGB bytes. The program allocates device buffers, copies the pixels to the GPU, launches one selected kernel, synchronizes, copies the result back, and writes a PPM output. The same command also records timings in a CSV file.
+**Display:** Process pixels on the GPU, compare with CPU, and measure transfers and kernels.
 
-## Slide 4 - CUDA/GPU Implementation
+**Say:** The objective is to show explicit CUDA concepts rather than hide them inside an image library: device allocation, memory copies, kernel launches, synchronization, error checking, and measured CUDA event timing.
 
-**On slide:** `cudaMalloc`, `cudaMemcpy`, `cudaGetLastError`, `cudaDeviceSynchronize`, `cudaFree`.
+## Slide 4 - Image Processing Pipeline
 
-**Speaker notes:** The implementation intentionally exposes the CUDA runtime calls. A `CUDA_CHECK` wrapper turns API failures into readable exceptions. Launch errors are checked immediately, and synchronization makes kernel completion explicit before the result is copied back.
+**Display:** Input PPM -> host RGB vector -> GPU buffers -> CUDA kernel -> host result -> output PPM and CSV.
 
-## Slide 5 - Kernel, Grid, and Block Explanation
+**Say:** The CPU loads a PPM image, the program copies its RGB bytes to device global memory, launches one operation, copies the result back, saves a PPM image, and appends timing data to `results/performance.csv`.
 
-**On slide:** `block(16, 16)` and rounded-up 2D grid.
+## Slide 5 - CUDA/GPU Architecture
 
-**Speaker notes:** Each thread computes one pixel. The coordinates are `x = blockIdx.x * blockDim.x + threadIdx.x` and `y = blockIdx.y * blockDim.y + threadIdx.y`. The grid is rounded up so every image pixel is covered; boundary checks prevent extra threads from accessing invalid coordinates.
+**Display:** Four kernels: grayscale, enhance, blur, edge.
 
-## Slide 6 - Execution Demonstration
+**Say:** The four CUDA kernels are `grayscale_kernel`, `enhance_kernel`, `blur_kernel`, and `edge_kernel`. Grayscale and enhancement are per-pixel operations. Blur and Sobel edge detection read a small clamped neighborhood, but each output pixel is still independently computed.
 
-**On slide:** Terminal commands and generated output names.
+## Slide 6 - CUDA Kernels
 
-**Speaker notes:** On the CUDA Linux machine I run `make clean`, `make info`, `make`, and `make run`. The `all` operation creates grayscale, enhanced, blurred, and edge images. I show the terminal output, the GPU information, and the four files in the output directory.
+**Display:** The 2D indexing code:
 
-## Slide 7 - Results and Performance
+```cpp
+int x = blockIdx.x * blockDim.x + threadIdx.x;
+int y = blockIdx.y * blockDim.y + threadIdx.y;
+```
 
-**On slide:** `results/performance.csv` columns.
+**Say:** Each thread owns one pixel. `blockIdx` selects the block, `blockDim` gives its dimensions, and `threadIdx` identifies the thread within it. Boundary checks protect the extra threads in the rounded-up grid.
 
-**Speaker notes:** The CSV records CPU time, GPU kernel time, host-to-device time, and device-to-host time for each operation. I compare the actual measurements from the target GPU. I do not claim a speedup unless the collected data shows one, and I explain that small images may be dominated by transfer overhead.
+## Slide 7 - Memory Transfers and Synchronization
 
-## Slide 8 - Challenges and Lessons Learned
+**Display:** `cudaMalloc`, `cudaMemcpy`, `cudaDeviceSynchronize`, `cudaFree`.
 
-**On slide:** Boundaries, transfers, synchronization, portability.
+**Say:** The application allocates input and output buffers with `cudaMalloc`, performs host-to-device and device-to-host `cudaMemcpy` calls, checks launch errors, synchronizes with `cudaDeviceSynchronize`, and releases resources. The `CUDA_CHECK` wrapper converts runtime failures into readable errors.
 
-**Speaker notes:** The neighborhood kernels must clamp coordinates at image edges. CUDA launches are asynchronous, so synchronization and error checks are important. PPM was selected to keep the project reproducible without requiring OpenCV or JPEG packages. The CPU reference provides a useful correctness and timing baseline.
+## Slide 8 - Hardware and Software Environment
 
-## Slide 9 - Future Improvements
+**Display:** GPU and toolkit evidence from `results/gpu_info.txt`.
 
-**On slide:** Shared-memory tiles, pinned memory, streams, repeated trials.
+**Say:** The verified environment is WSL Ubuntu 24.04 with an NVIDIA GeForce RTX 4060 Laptop GPU, driver 616.92, CUDA Toolkit 13.3.73, and `sm_89`. The project uses `nvcc`, C++17, `make`, and the self-contained PPM format.
 
-**Speaker notes:** Blur and Sobel could use shared-memory tiles to reduce repeated global-memory reads. Future experiments could use pinned host memory, CUDA streams, repeated trials with statistics, larger images, and optional PNG/JPEG support.
+## Slide 9 - Execution Demo: Build
 
-## Slide 10 - Conclusion
+**Display:** Terminal commands.
 
-**On slide:** Complete host-to-device-to-host CUDA pipeline.
+```bash
+make clean
+make info
+make
+```
 
-**Speaker notes:** This project demonstrates the central course concepts in a visible workflow: parallel kernels, 2D indexing, global memory, transfers, synchronization, error handling, and measurement. The repository is ready for peer review after the target CUDA machine generates its evidence files.
+**Say:** These commands remove the previous executable and generated images, show the GPU and compiler, and compile the unchanged CUDA implementation with the verified architecture.
+
+## Slide 10 - Execution Demo: Run
+
+**Display:** Runtime command and console output.
+
+```bash
+make run
+cat results/performance.csv
+```
+
+**Say:** `make run` executes all four operations and writes the output images. The console reports CPU time, GPU kernel time, and both transfer times. No CUDA runtime errors occurred in the verified run.
+
+## Slide 11 - Performance Results
+
+**Display:** The actual rows from `results/performance.csv`.
+
+```text
+grayscale,8,8,0.001,1.360,0.411,0.118
+enhance,8,8,0.002,0.341,0.176,0.067
+blur,8,8,0.003,0.109,0.069,0.104
+edge,8,8,0.002,0.354,0.095,0.169
+```
+
+**Say:** These are measured values from the RTX 4060 run. Because the supplied image is only 8x8, launch and transfer overhead dominate. I am not claiming GPU speedup from this tiny workload. A meaningful comparison needs a much larger image and repeated trials.
+
+## Slide 12 - Output Images
+
+**Display:** `grayscale.ppm`, `enhanced.ppm`, `blurred.ppm`, and `edges.ppm` converted for viewing if desired.
+
+**Say:** The outputs demonstrate the behavior of each operation: grayscale removes color, enhancement changes brightness and contrast, blur softens local detail, and Sobel detection highlights contours.
+
+## Slide 13 - Limitations
+
+**Display:** 8x8 sample, PPM format, global-memory neighborhood reads.
+
+**Say:** The current demonstration image is intentionally 8x8 and is for execution and functionality verification, not speedup measurement. The implementation uses PPM for portability and keeps neighborhood operations simple rather than using shared-memory tiling.
+
+## Slide 14 - Future Improvements
+
+**Display:** Larger benchmarks, shared memory, pinned memory, streams, and more filters.
+
+**Say:** Future work would benchmark realistic 1920x1080 images with repeated trials, use shared-memory tiles for blur and edges, test pinned memory and streams, add more filters, and optionally support PNG or JPEG through an external library.
+
+## Slide 15 - Conclusion and GitHub Repository
+
+**Display:** Public repository URL and evidence files.
+
+**Say:** This project demonstrates a complete CUDA host-to-device-to-host pipeline with four kernels, explicit memory management, synchronization, error checking, and timing. The source, outputs, CSV, and execution evidence are available at [github.com/TechBot-X/cuda-gpu-image-processing-capstone](https://github.com/TechBot-X/cuda-gpu-image-processing-capstone).
 
 ## Live Demo Checklist
 
@@ -71,4 +126,4 @@ cat results/performance.csv
 find output -maxdepth 1 -type f -print
 ```
 
-Capture the GPU model and toolkit version from `make info`, retain the terminal output, and place the actual files in `results/` before submission.
+Capture the GPU model and toolkit version from `make info`, retain the terminal output, and show the actual files in `results/` during the presentation. Do not claim a GPU speedup from the 8x8 sample.

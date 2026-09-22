@@ -2,11 +2,15 @@
 
 A beginner-friendly CUDA C++ capstone project for **CUDA at Scale for the Enterprise**. The application loads an RGB image, sends its pixels from host memory to NVIDIA GPU global memory, launches 2D CUDA kernels, copies the result back, saves it, and records measured CPU/GPU timings.
 
+Public repository: [https://github.com/TechBot-X/cuda-gpu-image-processing-capstone](https://github.com/TechBot-X/cuda-gpu-image-processing-capstone)
+
 The implementation uses PPM (`P3` or binary `P6`) images. PPM keeps the build self-contained on a headless Linux/Coursera machine: no OpenCV or JPEG development package is required. PPM output can be converted to PNG/JPEG afterward with ImageMagick or another image viewer.
 
 ## Project Overview
 
 Image processing is a strong GPU workload because pixels are mostly independent. A 1920x1080 image contains more than two million pixels, and the same arithmetic can be applied to every pixel concurrently. CUDA maps one thread to one output pixel and uses a 2D grid so the image's spatial structure is easy to understand.
+
+The problem addressed is repetitive per-pixel image enhancement: applying consistent color, intensity, neighborhood, and edge calculations across an entire image. The project objective is to implement those operations visibly in CUDA C++, compare them with CPU reference functions, and record real transfer and kernel timings.
 
 ## Motivation
 
@@ -81,7 +85,7 @@ cuda-image-processing/
 ├── Makefile
 ├── README.md
 ├── PROJECT_SUBMISSION.md
-├── PRESENTATION.md
+├── PRESENTATION.md        15-slide demo script
 ├── requirements.txt
 └── .gitignore
 ```
@@ -205,10 +209,10 @@ The verified WSL run used an NVIDIA GeForce RTX 4060 Laptop GPU with CUDA toolki
 
 ```text
 operation  cpu_ms  gpu_kernel_ms  host_to_device_ms  device_to_host_ms
-grayscale  0.001   1.423          0.445              0.080
-enhance    0.002   0.083          0.065              0.049
-blur       0.002   0.188          0.079              0.111
-edge       0.002   0.176          0.077              0.119
+grayscale  0.001   1.360          0.411              0.118
+enhance    0.002   0.341          0.176              0.067
+blur       0.003   0.109          0.069              0.104
+edge       0.002   0.354          0.095              0.169
 ```
 
 The sample is intentionally tiny, so these results prove GPU execution but do not claim a speedup. Kernel launch and transfer overhead dominate at 8x8. For a meaningful comparison, run the same program with a large image and compare the CPU and GPU columns. The raw CSV is available at `results/performance.csv`, and the evidence summary is at `results/performance.txt`.

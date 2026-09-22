@@ -15,13 +15,13 @@ Observed build and run:
 - make run completed without CUDA runtime errors.
 
 Program output:
-grayscale: CPU 0.001 ms, GPU kernel 1.423 ms, H2D 0.445 ms, D2H 0.080 ms
+grayscale: CPU 0.001 ms, GPU kernel 1.360 ms, H2D 0.411 ms, D2H 0.118 ms
 Saved output/grayscale.ppm (8x8)
-enhance: CPU 0.002 ms, GPU kernel 0.083 ms, H2D 0.065 ms, D2H 0.049 ms
+enhance: CPU 0.002 ms, GPU kernel 0.341 ms, H2D 0.176 ms, D2H 0.067 ms
 Saved output/enhanced.ppm (8x8)
-blur: CPU 0.002 ms, GPU kernel 0.188 ms, H2D 0.079 ms, D2H 0.111 ms
+blur: CPU 0.003 ms, GPU kernel 0.109 ms, H2D 0.069 ms, D2H 0.104 ms
 Saved output/blurred.ppm (8x8)
-edge: CPU 0.002 ms, GPU kernel 0.176 ms, H2D 0.077 ms, D2H 0.119 ms
+edge: CPU 0.002 ms, GPU kernel 0.354 ms, H2D 0.095 ms, D2H 0.169 ms
 Saved output/edges.ppm (8x8)
 
 Generated files:

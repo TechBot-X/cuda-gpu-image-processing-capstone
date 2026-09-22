@@ -1,5 +1,5 @@
 operation,image_width,image_height,cpu_time_ms,gpu_kernel_ms,host_to_device_ms,device_to_host_ms
-grayscale,8,8,0.001,1.423,0.445,0.080
-enhance,8,8,0.002,0.083,0.065,0.049
-blur,8,8,0.002,0.188,0.079,0.111
-edge,8,8,0.002,0.176,0.077,0.119
+grayscale,8,8,0.001,1.360,0.411,0.118
+enhance,8,8,0.002,0.341,0.176,0.067
+blur,8,8,0.003,0.109,0.069,0.104
+edge,8,8,0.002,0.354,0.095,0.169
