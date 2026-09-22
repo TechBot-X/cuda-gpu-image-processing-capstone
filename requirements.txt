@@ -1,0 +1,3 @@
+# No Python packages are required.
+# Build requirement: NVIDIA CUDA Toolkit with nvcc and a CUDA-capable GPU.
+# The project uses binary PPM (P6) to avoid external image-library dependencies.

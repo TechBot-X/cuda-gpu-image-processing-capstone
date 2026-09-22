@@ -1,0 +1,14 @@
+Generated output verification
+=============================
+
+All four operations completed successfully on the CUDA GPU:
+- output/grayscale.ppm (203 bytes, 8x8 PPM)
+- output/enhanced.ppm (203 bytes, 8x8 PPM)
+- output/blurred.ppm (203 bytes, 8x8 PPM)
+- output/edges.ppm (203 bytes, 8x8 PPM)
+
+SHA-256:
+blurred.ppm  66b6b62630b995b82c68aebba73c87a208f40c463bfed5d0d24aaedf4421924e
+edges.ppm    0acaae40d349d4b68c7d6d6aa43359d1d82aa97727b1cb5931426c4837dc0f43
+enhanced.ppm 7ec9d558231b28801a5ba430f24ac19e389ec84e67dc8119fcef34e3082a2cfb
+grayscale.ppm a89477afa17ada7a72d92975c8d89d7cb3bebd5fd9652cd4bd428d0755112635

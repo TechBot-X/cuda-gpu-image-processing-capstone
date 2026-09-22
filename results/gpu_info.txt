@@ -1,0 +1,23 @@
+CUDA GPU execution evidence
+===========================
+Captured: 2026-09-22
+Environment: WSL Ubuntu-24.04
+
+GPU query:
+NVIDIA GeForce RTX 4060 Laptop GPU, 616.92, 8188 MiB
+
+CUDA compiler:
+nvcc: NVIDIA (R) Cuda compiler driver
+Cuda compilation tools, release 13.3, V13.3.73
+Build cuda_13.3.r13.3/compiler.38244171_0
+
+Build architecture:
+-arch=sm_89
+
+CUDA APIs exercised by the application:
+cudaMalloc, cudaMemcpy, cudaGetLastError, cudaDeviceSynchronize, cudaEventCreate, cudaEventRecord, cudaEventSynchronize, cudaEventElapsedTime, cudaEventDestroy, cudaFree
+
+Kernels:
+grayscale_kernel, enhance_kernel, blur_kernel, edge_kernel
+
+Note: Kernels are launched with dim3 block(16, 16) and a rounded-up 2D grid.

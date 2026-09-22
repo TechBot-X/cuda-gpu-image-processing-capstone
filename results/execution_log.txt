@@ -1,0 +1,32 @@
+CUDA execution log
+===================
+
+Commands:
+make clean
+make info
+make
+make run
+
+Observed build and run:
+- make clean completed.
+- make info reported NVIDIA GeForce RTX 4060 Laptop GPU, driver 616.92, CUDA UMD 13.4.
+- nvcc reported CUDA compilation tools, release 13.3, V13.3.73.
+- Build succeeded with -arch=sm_89.
+- make run completed without CUDA runtime errors.
+
+Program output:
+grayscale: CPU 0.001 ms, GPU kernel 1.423 ms, H2D 0.445 ms, D2H 0.080 ms
+Saved output/grayscale.ppm (8x8)
+enhance: CPU 0.002 ms, GPU kernel 0.083 ms, H2D 0.065 ms, D2H 0.049 ms
+Saved output/enhanced.ppm (8x8)
+blur: CPU 0.002 ms, GPU kernel 0.188 ms, H2D 0.079 ms, D2H 0.111 ms
+Saved output/blurred.ppm (8x8)
+edge: CPU 0.002 ms, GPU kernel 0.176 ms, H2D 0.077 ms, D2H 0.119 ms
+Saved output/edges.ppm (8x8)
+
+Generated files:
+output/grayscale.ppm
+output/enhanced.ppm
+output/blurred.ppm
+output/edges.ppm
+results/performance.csv
